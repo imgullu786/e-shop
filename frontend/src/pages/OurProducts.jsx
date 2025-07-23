@@ -4,7 +4,7 @@ import ProductItem from '../components/ProductItem'
 import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets'
 
-const Collection = () => {
+const OurProducts = () => {
   const { products, search, showSearch } = useContext(ShopContext)
 
   const [filterProducts, setFilterProducts] = useState([])
@@ -155,7 +155,7 @@ const Collection = () => {
       {/* Products Section */}
       <section className="flex-1">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <Title text1="ALL" text2="COLLECTIONS" />
+          <Title text1="OUR" text2="PRODUCTS" />
           <select
             value={sortType}
             onChange={(e) => setSortType(e.target.value)}
@@ -189,4 +189,4 @@ const Collection = () => {
   )
 }
 
-export default Collection
+export default OurProducts

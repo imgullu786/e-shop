@@ -8,9 +8,9 @@ import job from './cron/cron.js'
 import userRouter from './routes/userRouter.js'
 import productRouter from './routes/productRouter.js'
 import cartRouter from './routes/cartRouter.js'
-// import orderRouter from './routes/orderRouter.js'
+import orderRouter from './routes/orderRouter.js'
 
-job.start()
+job.start();
 const app = express()
 const PORT = process.env.PORT || 4000
 connectCloudinary()
@@ -21,7 +21,7 @@ app.use(cors())
 app.use('/api/user',userRouter)
 app.use('/api/product',productRouter)
 app.use('/api/cart',cartRouter)
-// app.use('/api/order',orderRouter)
+app.use('/api/order',orderRouter)
 
 app.get('/',(req,res)=>{
     res.send("API Working")

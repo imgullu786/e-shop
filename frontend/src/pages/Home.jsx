@@ -1,14 +1,12 @@
 import React from 'react'
 import Carousel from '../components/Carousel'
-import LatestCollection from '../components/LatestCollection'
-import OurPolicy from '../components/OurPolicy'
+import NewArrivals from '../components/NewArrivals'
 
 const Home = () => {
   return (
     <div>
       <Carousel />
-      <LatestCollection />
-      <OurPolicy />
+      <NewArrivals />
     </div>
   )
 }

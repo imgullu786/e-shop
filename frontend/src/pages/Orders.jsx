@@ -1,9 +1,43 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import Title from '../components/Title';
+import axios from 'axios';
 
 const Orders = () => {
-  const { products } = useContext(ShopContext);
+    const { backendUrl, token} = useContext(ShopContext);
+
+  const [orderData,setorderData] = useState([])
+
+  const loadOrderData = async () => {
+    try {
+      if (!token) {
+        return null
+      }
+
+      const response = await axios.post(backendUrl + '/api/order/userorders',{},{headers:{token}})
+      if (response.data.success) {
+        let allOrdersItem = []
+        response.data.orders.map((order)=>{
+          order.items.map((item)=>{
+            item['status'] = order.status
+            item['payment'] = order.payment
+            item['paymentMethod'] = order.paymentMethod
+            item['date'] = order.date
+            allOrdersItem.push(item)
+          })
+        })
+        setorderData(allOrdersItem.reverse())
+      }
+      
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(()=>{
+    loadOrderData()
+  },[token])
+
 
   return (
     <div className="border-t pt-16 px-4 sm:px-10 lg:px-20 max-w-7xl mx-auto min-h-[70vh]">
@@ -12,7 +46,7 @@ const Orders = () => {
       </div>
 
       <div className="space-y-6">
-        {products.slice(1, 4).map((item, index) => (
+        {orderData.map((item, index) => (
           <div
             key={index}
             className="border rounded-lg p-4 flex flex-col md:flex-row md:justify-between md:items-center gap-6 shadow-sm"
@@ -32,7 +66,10 @@ const Orders = () => {
                   <p>Size: L</p>
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
-                  Date: <span className="text-gray-400">25 May, 2024</span>
+                  Date: <span className="text-gray-400">{new Date(item.date).toDateString()}</span>
+                </p>
+                <p className="mt-2 text-sm text-gray-500">
+                  Payment: <span className="text-gray-400">{item.paymentMethod}</span>
                 </p>
               </div>
             </div>
@@ -40,7 +77,7 @@ const Orders = () => {
             {/* Right: Status + Action */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:w-1/2">
               <div className="flex items-center gap-2">
-                <p className="text-sm sm:text-base text-red-600 font-medium">⚡ Ready to ship</p>
+                <p className="text-sm sm:text-base text-red-600 font-medium">⚡ {item.status}</p>
               </div>
               <button className="border border-gray-300 px-5 py-2 text-sm rounded hover:bg-gray-50 transition">
                 Track Order

@@ -3,7 +3,8 @@ import { ShopContext } from '../context/ShopContext';
 import ProductItem from './ProductItem';
 import Title from './Title';
 
-const LatestCollection = () => {
+const newArrivals
+ = () => {
 
     const [latestProducts, setLatestProducts] = useState([])
     const { products } = useContext(ShopContext)
@@ -20,7 +21,7 @@ const LatestCollection = () => {
         <div className='my-10'>
             <div className='text-center py-8 text-3xl'>
                 {/* Title */}
-                <Title text1='LATEST' text2='COLLECTIONS' />
+                <Title text1='NEW' text2='ARRIVALS' />
                 <p className='w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the.</p>
             </div>
 
@@ -37,4 +38,5 @@ const LatestCollection = () => {
     )
 }
 
-export default LatestCollection
+export default newArrivals
+

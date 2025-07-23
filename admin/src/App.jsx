@@ -1,14 +1,12 @@
 import './App.css'
 import { useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar'
 import { Routes, Route } from 'react-router-dom'
 import Add from './pages/Add'
 import List from './pages/List'
 import Orders from './pages/Orders'
 import Login from './pages/Login'
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'react-hot-toast'
 
 export const backendUrl = "https://eshop-backend-dtly.onrender.com"
 
@@ -20,16 +18,15 @@ const App = () => {
   },[token])
 
   return (
-    <div className='bg-gray-50 min-h-screen'>
-      <ToastContainer />
+    <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
+      <Toaster />
       {token === ""
         ? <Login setToken={setToken} />
         : <>
           <Navbar setToken={setToken} />
           <hr />
           <div className='flex w-full'>
-            <Sidebar />
-            <div className='w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base'>
+            <div className='w-full mx-auto my-8 text-gray-600 text-base'>
               <Routes>
                 <Route path='/add' element={<Add token={token} />} />
                 <Route path='/list' element={<List token={token} />} />

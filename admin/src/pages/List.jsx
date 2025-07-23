@@ -1,79 +1,92 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import { backendUrl } from '../App'
-import { toast } from 'react-toastify'
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { backendUrl } from '../App';
+import { toast } from "react-hot-toast";
+import Title from '../components/Title';
+import { assets } from '../assets/assets';
 
 const List = ({ token }) => {
-
-  const [list, setList] = useState([])
+  const [list, setList] = useState([]);
 
   const fetchList = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/product/list')
+      const response = await axios.get(`${backendUrl}/api/product/list`);
       if (response.data.success) {
         setList(response.data.products.reverse());
+      } else {
+        toast.error(response.data.message);
       }
-      else {
-        toast.error(response.data.message)
-      }
-
     } catch (error) {
-      console.log(error)
-      toast.error(error.message)
+      console.error(error);
+      toast.error(error.message);
     }
-  }
+  };
 
   const removeProduct = async (id) => {
     try {
-      const response = await axios.post(backendUrl + '/api/product/remove', { id }, { headers: { token } })
+      const response = await axios.post(`${backendUrl}/api/product/remove`, { id }, {
+        headers: { token },
+      });
       if (response.data.success) {
-        toast.success(response.data.message)
+        toast.success(response.data.message);
         await fetchList();
       } else {
-        toast.error(response.data.message)
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error)
-      toast.error(error.message)
+      console.error(error);
+      toast.error(error.message);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchList()
-  }, [])
+    fetchList();
+  }, []);
 
   return (
-    <>
-      <p className='mb-2'>All Products List</p>
-      <div className='flex flex-col gap-2'>
+    <div className="pt-4px-4 sm:px-10 lg:px-20 max-w-7xl w-full mx-auto">
+      {/* Title */}
+      <div className="text-2xl mb-6">
+        <Title text1="PRODUCT" text2="LIST" />
+      </div>
 
-        {/* ------- List Table Title ---------- */}
-
-        <div className='hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm'>
-          <b>Image</b>
-          <b>Name</b>
-          <b>Category</b>
-          <b>Price</b>
-          <b className='text-center'>Action</b>
-        </div>
-
-        {/* ------ Product List ------ */}
-
-        {
+      {/* Product List */}
+      <div className="flex flex-col gap-5 w-full">
+        {list.length > 0 ? (
           list.map((item, index) => (
-            <div className='grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border text-sm' key={index}>
-              <img className='w-12' src={item.image[0]} alt="" />
-              <p>{item.name}</p>
-              <p>{item.category}</p>
-              <p>₹ {item.price}</p>
-              <p onClick={()=>removeProduct(item._id)} className='text-right md:text-center cursor-pointer text-lg'>X</p>
+            <div
+              key={index}
+              className="border rounded-lg p-4 flex items-center justify-between gap-4 shadow-sm w-full"
+            >
+              <div className="flex items-center gap-4 flex-1">
+                <img
+                  src={item.image?.[0] || assets.upload_area}
+                  alt={item.name}
+                  className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded"
+                />
+                <div>
+                  <p className="text-base font-medium">{item.name}</p>
+                  <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
+                    <p>₹ {item.price}</p>
+                    <span className="px-3 py-1 bg-gray-100 border rounded">{item.category}</span>
+                  </div>
+                </div>
+              </div>
+
+              <img
+                src={assets.bin_icon}
+                alt="Delete"
+                onClick={() => removeProduct(item._id)}
+                className="w-5 h-5 cursor-pointer opacity-70 hover:opacity-100"
+              />
             </div>
           ))
-        }
-
+        ) : (
+          <p className="text-gray-500 text-center">No products available.</p>
+        )}
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default List
+export default List;
